@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fokusin_app1/core/constants/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,281 +12,235 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _shadowCtrl;
-  late AnimationController _iconCtrl;
-  late AnimationController _logoCtrl;
-  late AnimationController _tagCtrl;
+    with SingleTickerProviderStateMixin {
+  static const Color _bg = Color(0xFF229EFF);
 
-  late Animation<double> _shadowScaleX, _shadowOpacity;
-  late Animation<double> _iconScale, _iconOpacity;
-  late Animation<double> _logoScale, _logoOpacity;
-  late Animation<Offset> _logoSlide;
-  late Animation<double> _tagOpacity;
-  late Animation<Offset> _tagSlide;
+  late AnimationController _controller;
+
+  // ELLIPSE
+  late Animation<double> _ellipseWidth;
+  late Animation<double> _ellipseHeight;
+  late Animation<double> _ellipseOpacity;
+
+  // LOGO
+  late Animation<double> _logoOpacity;
+  late Animation<double> _logoScale;
+  late Animation<Offset> _logoMove;
+
+  // TEXT
+  late Animation<Offset> _fSlide;
+  late Animation<Offset> _kusinSlide;
+  late Animation<double> _textOpacity;
 
   @override
   void initState() {
     super.initState();
-    _lockUI();
-    _initAnims();
-    _play();
-  }
 
-  void _lockUI() {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: AppColors.primary,
+        systemNavigationBarColor: _bg,
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
-  }
 
-  void _initAnims() {
-    _shadowCtrl = AnimationController(
+    _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 5500),
     );
-    _shadowScaleX = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _shadowCtrl, curve: Curves.easeOutBack));
-    _shadowOpacity = Tween(begin: 0.0, end: 1.0).animate(
+
+    // =========================
+    // DOT -> ELLIPSE
+    // =========================
+
+    _ellipseWidth = Tween<double>(begin: 12, end: 180).animate(
       CurvedAnimation(
-        parent: _shadowCtrl,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeIn),
+        parent: _controller,
+        curve: const Interval(0.0, 0.18, curve: Curves.easeOutCubic),
       ),
     );
 
-    _iconCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _iconScale = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _iconCtrl, curve: Curves.elasticOut));
-    _iconOpacity = Tween(begin: 0.0, end: 1.0).animate(
+    _ellipseHeight = Tween<double>(begin: 12, end: 24).animate(
       CurvedAnimation(
-        parent: _iconCtrl,
-        curve: const Interval(0.0, 0.4, curve: Curves.easeIn),
+        parent: _controller,
+        curve: const Interval(0.0, 0.18, curve: Curves.easeOutCubic),
       ),
     );
 
-    _logoCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    );
-    _logoScale = Tween(
-      begin: 0.7,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _logoCtrl, curve: Curves.easeOutBack));
-    _logoOpacity = Tween(begin: 0.0, end: 1.0).animate(
+    _ellipseOpacity = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
-        parent: _logoCtrl,
-        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+        parent: _controller,
+        curve: const Interval(0.15, 0.28, curve: Curves.easeOut),
       ),
     );
-    _logoSlide = Tween(
-      begin: const Offset(0, 0.12),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _logoCtrl, curve: Curves.easeOutCubic));
 
-    _tagCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
+    // =========================
+    // LOGO SOLO
+    // =========================
+
+    _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.22, 0.35, curve: Curves.easeIn),
+      ),
     );
-    _tagOpacity = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _tagCtrl, curve: Curves.easeIn));
-    _tagSlide = Tween(
-      begin: const Offset(0, 0.4),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _tagCtrl, curve: Curves.easeOutCubic));
-  }
 
-  Future<void> _play() async {
-    await Future.delayed(const Duration(milliseconds: 50));
+    // Logo muncul besar -> settle
+    _logoScale = Tween<double>(begin: 1.8, end: 0.88).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.22, 0.72, curve: Curves.easeOutExpo),
+      ),
+    );
 
-    // Phase 1 – shadow
-    await _shadowCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 80));
+    // Logo geser kiri setelah hold
+    _logoMove = Tween<Offset>(begin: Offset.zero, end: const Offset(-0.12, 0))
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.62, 0.82, curve: Curves.easeOutCubic),
+          ),
+        );
 
-    // Phase 2 – shadow hilang, ikon muncul
-    await _shadowCtrl.reverse();
-    await _iconCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 150));
+    // =========================
+    // TEXT REVEAL
+    // =========================
 
-    // Phase 3 – ikon hilang, logo F+ikon+KUSIN muncul
-    await _iconCtrl.reverse();
-    await _logoCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 100));
+    _fSlide = Tween<Offset>(begin: const Offset(0, 3.5), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.72, 0.90, curve: Curves.easeOutBack),
+          ),
+        );
 
-    // Phase 4 – tagline
-    await _tagCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 1800));
+    _kusinSlide = Tween<Offset>(begin: const Offset(0, 3.5), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.76, 0.94, curve: Curves.easeOutBack),
+          ),
+        );
 
-    if (mounted) context.go('/home');
+    _textOpacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.72, 0.90, curve: Curves.easeIn),
+      ),
+    );
+
+    _controller.forward();
+
+    // HOLD sebelum onboarding
+    Future.delayed(const Duration(milliseconds: 6500), () {
+      if (mounted) {
+        context.go('/splash-cream');
+      }
+    });
   }
 
   @override
   void dispose() {
-    _shadowCtrl.dispose();
-    _iconCtrl.dispose();
-    _logoCtrl.dispose();
-    _tagCtrl.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle logoStyle = GoogleFonts.lalezar(
+      color: const Color(0xFFF6F6F6),
+      fontSize: 48,
+      fontWeight: FontWeight.w400,
+      height: 1,
+    );
+
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Stack(
-        children: [
-          // Shadow oval (phase 1) — di belakang
-          Center(child: _buildShadow()),
+      backgroundColor: _bg,
 
-          // Konten utama — di tengah
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: Center(
+        child: AnimatedBuilder(
+          animation: _controller,
+
+          builder: (context, child) {
+            return Stack(
+              alignment: Alignment.center,
+
               children: [
-                // Phase 2 & 3 di-stack agar overlap di posisi sama
-                SizedBox(
-                  height: 100, // ruang tetap, ikon & logo bergantian di sini
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Phase 2: ikon saja
-                      _buildIconOnly(),
-                      // Phase 3: F + ikon + KUSIN
-                      _buildFullLogo(),
-                    ],
-                  ),
-                ),
+                // =========================
+                // ELLIPSE
+                // =========================
+                Opacity(
+                  opacity: _ellipseOpacity.value,
 
-                const SizedBox(height: 16),
+                  child: Container(
+                    width: _ellipseWidth.value,
+                    height: _ellipseHeight.value,
 
-                // Phase 4: tagline
-                _buildTagline(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ── Phase 1: Shadow oval ───────────────────────────────────────────────────
-  Widget _buildShadow() {
-    return AnimatedBuilder(
-      animation: _shadowCtrl,
-      builder: (_, __) => Opacity(
-        opacity: _shadowOpacity.value,
-        child: Transform.scale(
-          scaleX: _shadowScaleX.value,
-          child: Container(
-            width: 130,
-            height: 22,
-            decoration: BoxDecoration(
-              color: AppColors.blue700.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(65),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.blue700.withOpacity(0.35),
-                  blurRadius: 24,
-                  spreadRadius: 6,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Phase 2: ikon logo_blue.svg warna asli ────────────────────────────────
-  Widget _buildIconOnly() {
-    return AnimatedBuilder(
-      animation: _iconCtrl,
-      builder: (_, __) => Opacity(
-        opacity: _iconOpacity.value,
-        child: Transform.scale(
-          scale: _iconScale.value,
-          child: SvgPicture.asset(
-            'assets/icons/logo_blue.svg',
-            width: 244,
-            height: 81,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Phase 3: "F" + logo_blue.svg + "KUSIN" ────────────────────────────────
-  Widget _buildFullLogo() {
-    return AnimatedBuilder(
-      animation: _logoCtrl,
-      builder: (_, __) {
-        final logoStyle = GoogleFonts.lalezar(
-          color: Colors.white,
-          fontSize: 48,
-          fontWeight: FontWeight.w400,
-          height: 1.0,
-        );
-
-        return Opacity(
-          opacity: _logoOpacity.value,
-          child: SlideTransition(
-            position: _logoSlide,
-            child: Transform.scale(
-              scale: _logoScale.value,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('F', style: logoStyle),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: SvgPicture.asset(
-                      'assets/icons/logo_blue.svg',
-                      width: 46,
-                      height: 46,
-                      fit: BoxFit.contain,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(999),
                     ),
                   ),
-                  Text('KUSIN', style: logoStyle),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+                ),
 
-  // ── Phase 4: Tagline ───────────────────────────────────────────────────────
-  Widget _buildTagline() {
-    return AnimatedBuilder(
-      animation: _tagCtrl,
-      builder: (_, __) => Opacity(
-        opacity: _tagOpacity.value,
-        child: SlideTransition(
-          position: _tagSlide,
-          child: Text(
-            'Stay Focused. Stay Productive.',
-            style: GoogleFonts.lalezar(
-              color: Colors.white.withOpacity(0.72),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 0.5,
-            ),
-          ),
+                // =========================
+                // FINAL LOGO ROW
+                // =========================
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                  children: [
+                    // F
+                    FadeTransition(
+                      opacity: _textOpacity,
+
+                      child: SlideTransition(
+                        position: _fSlide,
+
+                        child: Text('F', style: logoStyle),
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    // LOGO
+                    SlideTransition(
+                      position: _logoMove,
+
+                      child: Transform.scale(
+                        scale: _logoScale.value,
+
+                        child: Opacity(
+                          opacity: _logoOpacity.value,
+
+                          child: SvgPicture.asset(
+                            'assets/icons/logo_white.svg',
+                            width: 54,
+                            height: 54,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    // KUSIN
+                    FadeTransition(
+                      opacity: _textOpacity,
+
+                      child: SlideTransition(
+                        position: _kusinSlide,
+
+                        child: Text('KUSIN', style: logoStyle),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
