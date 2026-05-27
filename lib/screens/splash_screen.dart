@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
   // LOGO
   late Animation<double> _logoOpacity;
   late Animation<double> _logoScale;
-  late Animation<Offset> _logoMove;
+  late Animation<Offset> _logoSlide;
 
   // TEXT
   late Animation<Offset> _fSlide;
@@ -54,14 +54,14 @@ class _SplashScreenState extends State<SplashScreen>
     // DOT -> ELLIPSE
     // =========================
 
-    _ellipseWidth = Tween<double>(begin: 12, end: 180).animate(
+    _ellipseWidth = Tween<double>(begin: 10, end: 180).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.18, curve: Curves.easeOutCubic),
       ),
     );
 
-    _ellipseHeight = Tween<double>(begin: 12, end: 24).animate(
+    _ellipseHeight = Tween<double>(begin: 10, end: 24).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.18, curve: Curves.easeOutCubic),
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     // =========================
-    // LOGO SOLO
+    // LOGO
     // =========================
 
     _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
@@ -86,32 +86,32 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // Logo muncul besar -> settle
-    _logoScale = Tween<double>(begin: 1.8, end: 0.88).animate(
+    // Logo besar di tengah lalu mengecil natural
+    _logoScale = Tween<double>(begin: 1.8, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.22, 0.72, curve: Curves.easeOutExpo),
       ),
     );
 
-    // Logo geser kiri setelah hold
-    _logoMove = Tween<Offset>(begin: Offset.zero, end: const Offset(-0.12, 0))
+    // Logo awalnya center, lalu geser jadi huruf O
+    _logoSlide = Tween<Offset>(begin: const Offset(0.85, 0), end: Offset.zero)
         .animate(
           CurvedAnimation(
             parent: _controller,
-            curve: const Interval(0.62, 0.82, curve: Curves.easeOutCubic),
+            curve: const Interval(0.55, 0.82, curve: Curves.easeOutCubic),
           ),
         );
 
     // =========================
-    // TEXT REVEAL
+    // TEXT
     // =========================
 
     _fSlide = Tween<Offset>(begin: const Offset(0, 3.5), end: Offset.zero)
         .animate(
           CurvedAnimation(
             parent: _controller,
-            curve: const Interval(0.72, 0.90, curve: Curves.easeOutBack),
+            curve: const Interval(0.72, 0.92, curve: Curves.easeOutBack),
           ),
         );
 
@@ -130,10 +130,11 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
+    // START
     _controller.forward();
 
-    // HOLD sebelum onboarding
-    Future.delayed(const Duration(milliseconds: 6500), () {
+    // NAVIGATE
+    Future.delayed(const Duration(milliseconds: 8200), () {
       if (mounted) {
         context.go('/splash-cream');
       }
@@ -150,7 +151,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final TextStyle logoStyle = GoogleFonts.lalezar(
       color: const Color(0xFFF6F6F6),
-      fontSize: 48,
+      fontSize: 44,
       fontWeight: FontWeight.w400,
       height: 1,
     );
@@ -185,7 +186,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
 
                 // =========================
-                // FINAL LOGO ROW
+                // LOGO + TEXT
                 // =========================
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -193,11 +194,11 @@ class _SplashScreenState extends State<SplashScreen>
 
                   children: [
                     // F
-                    FadeTransition(
-                      opacity: _textOpacity,
+                    SlideTransition(
+                      position: _fSlide,
 
-                      child: SlideTransition(
-                        position: _fSlide,
+                      child: FadeTransition(
+                        opacity: _textOpacity,
 
                         child: Text('F', style: logoStyle),
                       ),
@@ -207,13 +208,13 @@ class _SplashScreenState extends State<SplashScreen>
 
                     // LOGO
                     SlideTransition(
-                      position: _logoMove,
+                      position: _logoSlide,
 
                       child: Transform.scale(
                         scale: _logoScale.value,
 
-                        child: Opacity(
-                          opacity: _logoOpacity.value,
+                        child: FadeTransition(
+                          opacity: _logoOpacity,
 
                           child: SvgPicture.asset(
                             'assets/icons/logo_white.svg',
@@ -227,11 +228,11 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(width: 4),
 
                     // KUSIN
-                    FadeTransition(
-                      opacity: _textOpacity,
+                    SlideTransition(
+                      position: _kusinSlide,
 
-                      child: SlideTransition(
-                        position: _kusinSlide,
+                      child: FadeTransition(
+                        opacity: _textOpacity,
 
                         child: Text('KUSIN', style: logoStyle),
                       ),
