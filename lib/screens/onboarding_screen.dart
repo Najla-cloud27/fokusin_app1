@@ -6,65 +6,72 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// lib/screens/onboarding_screen.dart
-// 4 halaman: welcome + 3 onboarding
-// Auto slide 3 detik, swipe manual, indicator lingkaran biru-kuning
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  // ── Warna ─────────────────────────────────────────────────────────────────
+  // ================= COLORS =================
   static const Color _cream = Color(0xFFFFF8E4);
   static const Color _blue = Color(0xFF229EFF);
   static const Color _dark = Color(0xFF1A1A2E);
-  static const Color _grey = Color(0xFF7A7A9D);
   static const Color _yellow = Color(0xFFFFD600);
-  static const Color _waveBlue = Color(0xFF5DBAFF);
 
-  // ── Data halaman ───────────────────────────────────────────────────────────
+  // ================= DATA ONBOARDING =================
   static const List<_OBData> _pages = <_OBData>[
+    // ===== WELCOME =====
     _OBData(
       titleLines: <String>['Selamat datang'],
-      titleWithLogo: true, // huruf O = logo
+      titleWithLogo: true,
       subtitle: 'Fokus lebih baik, capai tujuanmu.\nAyo Mulai!',
       character: 'assets/images/gambar1.png',
-      waveType: _WaveType.circle,
+      waveImage: 'assets/images/wave_welcome.png',
     ),
+
+    // ===== ONBOARDING 1 =====
     _OBData(
-      titleLines: <String>['Susah fokus saat belajar?'],
+      titleLines: <String>['Susah fokus saat\nbelajar?'],
       titleWithLogo: false,
       subtitle: 'Banyak distraksi jadi bikin\ntugas jadi tertunda.',
       character: 'assets/images/gambar2.png',
-      waveType: _WaveType.diagonal,
+      waveImage: 'assets/images/wave_onboarding1.png',
     ),
+
+    // ===== ONBOARDING 2 =====
     _OBData(
-      titleLines: <String>['Fokus sedikit, tapi konsisten'],
+      titleLines: <String>['Fokus sedikit, tapi\nkonsisten'],
       titleWithLogo: false,
       subtitle: 'Gunakan metode Pomodoro untuk\nbantu kamu tetap on track',
       character: 'assets/images/gambar3.png',
-      waveType: _WaveType.sCurve,
+      waveImage: 'assets/images/wave_onboarding2.png',
     ),
+
+    // ===== ONBOARDING 3 =====
     _OBData(
-      titleLines: <String>['Capai targetmu setiap hari'],
+      titleLines: <String>['Capai targetmu\nsetiap hari'],
       titleWithLogo: false,
       subtitle: 'Bangun kebiasaan fokus\ndan selesaikan tugasmu.',
       character: 'assets/images/gambar4.png',
-      waveType: _WaveType.arch,
+      waveImage: 'assets/images/wave_onboarding3.png',
     ),
   ];
 
-  // ── State ──────────────────────────────────────────────────────────────────
+  // ================= STATE =================
   int _page = 0;
+
   final PageController _ctrl = PageController();
+
   Timer? _timer;
 
+  // ================= INIT =================
   @override
   void initState() {
     super.initState();
+
+    // Status bar
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -73,67 +80,88 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
+
+    // Auto slide onboarding
     _startTimer();
   }
 
+  // ================= AUTO SLIDE =================
   void _startTimer() {
     _timer?.cancel();
+
     _timer = Timer.periodic(const Duration(seconds: 3), (_) {
       if (!mounted) return;
+
+      // Kalau belum halaman terakhir
       if (_page < _pages.length - 1) {
         _goTo(_page + 1);
       } else {
+        // Kalau sudah terakhir -> ke home
         _timer?.cancel();
+
         context.go('/home');
       }
     });
   }
 
+  // ================= PINDAH PAGE =================
   void _goTo(int index) {
     setState(() => _page = index);
+
     _ctrl.animateToPage(
       index,
+
       duration: const Duration(milliseconds: 500),
+
       curve: Curves.easeInOutCubic,
     );
   }
 
+  // ================= PAGE CHANGED =================
   void _onPageChanged(int index) {
     setState(() => _page = index);
-    _startTimer(); // reset timer saat swipe manual
+
+    _startTimer();
   }
 
+  // ================= DISPOSE =================
   @override
   void dispose() {
     _timer?.cancel();
+
     _ctrl.dispose();
+
     super.dispose();
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
+  //  UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _cream,
+
       body: SafeArea(
         child: Stack(
-          children: <Widget>[
-            // ── PageView ────────────────────────────────────────────────────
+          children: [
+            // ================= PAGEVIEW =
             PageView.builder(
               controller: _ctrl,
+
               onPageChanged: _onPageChanged,
-              physics: const ClampingScrollPhysics(),
+
               itemCount: _pages.length,
-              itemBuilder: (BuildContext context, int index) {
+
+              itemBuilder: (context, index) {
                 return _buildPage(context, _pages[index]);
               },
             ),
 
-            // ── Indicator bawah ─────────────────────────────────────────────
+            // ================= INDICATOR =================
             Positioned(
-              bottom: 24,
+              bottom: 34,
               left: 0,
               right: 0,
+
               child: Center(
                 child: _SpinnerIndicator(
                   page: _page,
@@ -149,116 +177,130 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Satu halaman ──────────────────────────────────────────────────────────
+  // ================= PAGE =================
   Widget _buildPage(BuildContext context, _OBData data) {
-    final Size size = MediaQuery.of(context).size;
+    return Stack(
+      children: [
+        // ================= BACKGROUND WAVE =================
+        Positioned.fill(child: Image.asset(data.waveImage, fit: BoxFit.cover)),
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        // ── Teks di atas ────────────────────────────────────────────────────
-        Padding(
-          padding: const EdgeInsets.fromLTRB(28, 32, 28, 8),
+        // ================= ISI PAGE =================
+        SafeArea(
           child: Column(
-            children: <Widget>[
-              // Title
-              data.titleWithLogo
-                  ? _buildLogoTitle(context)
-                  : Text(
-                      data.titleLines.first,
+            children: [
+              // ===== JARAK ATAS =====
+              const SizedBox(height: 38),
+
+              // ================= TITLE + SUBTITLE =================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+
+                child: Column(
+                  children: [
+                    // ================= TITLE =================
+                    data.titleWithLogo
+                        // ===== TITLE WITH LOGO =====
+                        ? _buildLogoTitle()
+                        // ===== TITLE NORMAL =====
+                        : Text(
+                            data.titleLines.first,
+
+                            textAlign: TextAlign.center,
+
+                            style: GoogleFonts.poppins(
+                              color: _dark,
+
+                              fontSize: 18,
+
+                              fontWeight: FontWeight.w700,
+
+                              height: 1.1,
+                            ),
+                          ),
+
+                    const SizedBox(height: 14),
+
+                    // ================= SUBTITLE =================
+                    Text(
+                      data.subtitle,
+
                       textAlign: TextAlign.center,
+
                       style: GoogleFonts.poppins(
-                        color: _dark,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF141414),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                         height: 1.35,
                       ),
                     ),
-              const SizedBox(height: 12),
-              // Subtitle
-              Text(
-                data.subtitle,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  color: _grey,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 1.6,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // ── Wave + karakter ─────────────────────────────────────────────────
-        Expanded(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              // Wave background
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: _WavePainter(type: data.waveType, color: _waveBlue),
+                  ],
                 ),
               ),
 
-              // Karakter di atas wave
-              Positioned(
-                bottom: 56, // beri ruang untuk indicator
-                left: 0,
-                right: 0,
+              // ================= SPACER =================
+              const Spacer(flex: 1),
+
+              // ================= CHARACTER =================
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+
                 child: Center(
                   child: Image.asset(
                     data.character,
-                    height: size.height * 0.38,
+
+                    height: 255,
+
                     fit: BoxFit.contain,
-                    filterQuality: FilterQuality.high,
-                    errorBuilder: (_, __, ___) => SizedBox(
-                      height: size.height * 0.38,
-                      child: Icon(
-                        Icons.image_outlined,
-                        size: 80,
-                        color: _blue.withValues(alpha: 0.4),
-                      ),
-                    ),
                   ),
                 ),
               ),
             ],
           ),
         ),
-
-        // Ruang untuk indicator
-        const SizedBox(height: 88),
       ],
     );
   }
 
-  // ── Title welcome dengan logo menggantikan huruf O ─────────────────────────
-  Widget _buildLogoTitle(BuildContext context) {
+  // ================= TITLE LOGO =================
+  Widget _buildLogoTitle() {
     final TextStyle style = GoogleFonts.poppins(
       color: _dark,
-      fontSize: 22,
+
+      fontSize: 18,
+
       fontWeight: FontWeight.w700,
-      height: 1.35,
+
+      height: 1.1,
     );
+
     return Column(
-      children: <Widget>[
+      children: [
+        // ===== BARIS 1 =====
         Text('Selamat datang', textAlign: TextAlign.center, style: style),
+
+        // ===== BARIS 2 =====
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+
+          children: [
             Text('di F', style: style),
+
+            // ===== LOGO =====
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 1),
+
               child: SvgPicture.asset(
                 'assets/icons/logo_blue.svg',
-                width: 24,
-                height: 24,
+
+                width: 22,
+                height: 22,
+
                 fit: BoxFit.contain,
               ),
             ),
+
             Text('kusin', style: style),
           ],
         ),
@@ -267,112 +309,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// ─── Data model ─────────────────────────────────────────────────────────────
-enum _WaveType { circle, diagonal, sCurve, arch }
-
+// ================= DATA MODEL =================
 class _OBData {
   final List<String> titleLines;
+
   final bool titleWithLogo;
+
   final String subtitle;
+
   final String character;
-  final _WaveType waveType;
+
+  final String waveImage;
+
   const _OBData({
     required this.titleLines,
     required this.titleWithLogo,
     required this.subtitle,
     required this.character,
-    required this.waveType,
+    required this.waveImage,
   });
 }
 
-// ─── Wave CustomPainter (BUKAN untuk wave PNG — ini untuk shape background) ──
-class _WavePainter extends CustomPainter {
-  final _WaveType type;
-  final Color color;
-  const _WavePainter({required this.type, required this.color});
-
-  @override
-  void paint(Canvas canvas, Size s) {
-    final Paint p = Paint()
-      ..color = color.withValues(alpha: 0.85)
-      ..style = PaintingStyle.fill;
-
-    switch (type) {
-      case _WaveType.circle:
-        // Lingkaran besar di kanan-bawah (welcome)
-        canvas.drawCircle(
-          Offset(s.width * 0.55, s.height * 0.52),
-          s.width * 0.72,
-          p,
-        );
-        break;
-
-      case _WaveType.diagonal:
-        // Diagonal dari kiri-atas ke kanan-bawah (OB1)
-        final Path path = Path()
-          ..moveTo(0, s.height * 0.30)
-          ..cubicTo(
-            s.width * 0.2,
-            s.height * 0.10,
-            s.width * 0.6,
-            s.height * 0.25,
-            s.width,
-            s.height * 0.15,
-          )
-          ..lineTo(s.width, s.height)
-          ..lineTo(0, s.height)
-          ..close();
-        canvas.drawPath(path, p);
-        break;
-
-      case _WaveType.sCurve:
-        // S-curve (OB2)
-        final Path path = Path()
-          ..moveTo(0, s.height * 0.22)
-          ..cubicTo(
-            s.width * 0.35,
-            s.height * -0.05,
-            s.width * 0.65,
-            s.height * 0.48,
-            s.width,
-            s.height * 0.20,
-          )
-          ..lineTo(s.width, s.height)
-          ..lineTo(0, s.height)
-          ..close();
-        canvas.drawPath(path, p);
-        break;
-
-      case _WaveType.arch:
-        // Arch/hill (OB3)
-        final Path path = Path()
-          ..moveTo(0, s.height * 0.38)
-          ..cubicTo(
-            s.width * 0.25,
-            s.height * 0.0,
-            s.width * 0.75,
-            s.height * 0.0,
-            s.width,
-            s.height * 0.38,
-          )
-          ..lineTo(s.width, s.height)
-          ..lineTo(0, s.height)
-          ..close();
-        canvas.drawPath(path, p);
-        break;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter _) => false;
-}
-
-// ─── Indicator lingkaran biru + arc kuning ──────────────────────────────────
+// ================= INDICATOR =================
 class _SpinnerIndicator extends StatelessWidget {
   final int page;
+
   final int total;
+
   final Color blue;
+
   final Color yellow;
+
   const _SpinnerIndicator({
     required this.page,
     required this.total,
@@ -383,26 +350,35 @@ class _SpinnerIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double progress = (page + 1) / total;
+
     return SizedBox(
       width: 64,
       height: 64,
+
       child: Stack(
         alignment: Alignment.center,
-        children: <Widget>[
-          // Arc kuning (progress)
+
+        children: [
+          // ================= ARC =================
           CustomPaint(
             size: const Size(64, 64),
+
             painter: _ArcPainter(
               progress: progress,
-              trackColor: yellow.withValues(alpha: 0.25),
+
+              trackColor: yellow.withOpacity(0.25),
+
               arcColor: yellow,
+
               strokeWidth: 4.5,
             ),
           ),
-          // Lingkaran biru
+
+          // ================= BLUE CIRCLE =================
           Container(
             width: 48,
             height: 48,
+
             decoration: BoxDecoration(color: blue, shape: BoxShape.circle),
           ),
         ],
@@ -411,12 +387,16 @@ class _SpinnerIndicator extends StatelessWidget {
   }
 }
 
-// ─── Arc painter untuk indicator ────────────────────────────────────────────
+// ================= ARC PAINTER =================
 class _ArcPainter extends CustomPainter {
   final double progress;
+
   final Color trackColor;
+
   final Color arcColor;
+
   final double strokeWidth;
+
   const _ArcPainter({
     required this.progress,
     required this.trackColor,
@@ -427,35 +407,42 @@ class _ArcPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2, size.height / 2);
+
     final double radius = size.width / 2 - strokeWidth / 2;
+
     final Rect rect = Rect.fromCircle(center: center, radius: radius);
 
-    // Track
+    // ================= TRACK =================
     canvas.drawCircle(
       center,
       radius,
+
       Paint()
         ..color = trackColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth,
     );
 
-    // Arc
-    if (progress > 0) {
-      canvas.drawArc(
-        rect,
-        -math.pi / 2,
-        2 * math.pi * progress,
-        false,
-        Paint()
-          ..color = arcColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = strokeWidth
-          ..strokeCap = StrokeCap.round,
-      );
-    }
+    // ================= ARC =================
+    canvas.drawArc(
+      rect,
+
+      -math.pi / 2,
+
+      2 * math.pi * progress,
+
+      false,
+
+      Paint()
+        ..color = arcColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _ArcPainter old) => old.progress != progress;
+  bool shouldRepaint(covariant _ArcPainter old) {
+    return old.progress != progress;
+  }
 }
