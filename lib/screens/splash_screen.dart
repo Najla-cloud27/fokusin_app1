@@ -50,10 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 5500),
     );
 
-    // =========================
     // DOT -> ELLIPSE
-    // =========================
-
     _ellipseWidth = Tween<double>(begin: 10, end: 180).animate(
       CurvedAnimation(
         parent: _controller,
@@ -75,10 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // =========================
     // LOGO
-    // =========================
-
     _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
@@ -103,10 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
 
-    // =========================
     // TEXT
-    // =========================
-
     _fSlide = Tween<Offset>(begin: const Offset(0, 3.5), end: Offset.zero)
         .animate(
           CurvedAnimation(
@@ -168,9 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
               alignment: Alignment.center,
 
               children: [
-                // =========================
                 // ELLIPSE
-                // =========================
                 Opacity(
                   opacity: _ellipseOpacity.value,
 
@@ -185,9 +174,8 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
 
-                // =========================
+                
                 // LOGO + TEXT
-                // =========================
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
