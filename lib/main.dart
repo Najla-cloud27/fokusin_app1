@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'routes/app_routes.dart';
+import 'package:fokusin_app1/routes/app_routes.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+
+  usePathUrlStrategy();
+
   runApp(const FokusinApp());
 }
 
@@ -17,14 +16,10 @@ class FokusinApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Fokusin',
       debugShowCheckedModeBanner: false,
+
+      // PAKAI INI
       routerConfig: appRouter,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF229EFF)),
-        scaffoldBackgroundColor: const Color(0xFF229EFF),
-      ),
     );
   }
 }

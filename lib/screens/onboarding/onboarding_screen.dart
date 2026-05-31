@@ -1,10 +1,16 @@
+// lib/screens/onboarding/onboarding_screen.dart
+
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// ================= IMPORT ASSET PATHS =================
+import '../../core/constants/asset_paths.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -16,8 +22,11 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   // ================= COLORS =================
   static const Color _cream = Color(0xFFFFF8E4);
+
   static const Color _blue = Color(0xFF229EFF);
+
   static const Color _dark = Color(0xFF1A1A2E);
+
   static const Color _yellow = Color(0xFFFFD600);
 
   // ================= DATA ONBOARDING =================
@@ -25,37 +34,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     // ===== WELCOME =====
     _OBData(
       titleLines: <String>['Selamat datang'],
+
       titleWithLogo: true,
+
       subtitle: 'Fokus lebih baik, capai tujuanmu.\nAyo Mulai!',
-      character: 'assets/images/gambar1.png',
-      waveImage: 'assets/images/wave_welcome.png',
+
+      character: AssetPaths.loginCharacter,
+
+      waveImage: AssetPaths.waveWelcome,
     ),
 
     // ===== ONBOARDING 1 =====
     _OBData(
       titleLines: <String>['Susah fokus saat\nbelajar?'],
+
       titleWithLogo: false,
+
       subtitle: 'Banyak distraksi jadi bikin\ntugas jadi tertunda.',
-      character: 'assets/images/gambar2.png',
-      waveImage: 'assets/images/wave_onboarding1.png',
+
+      character: AssetPaths.gambar2,
+
+      waveImage: AssetPaths.waveOnboarding1,
     ),
 
     // ===== ONBOARDING 2 =====
     _OBData(
       titleLines: <String>['Fokus sedikit, tapi\nkonsisten'],
+
       titleWithLogo: false,
+
       subtitle: 'Gunakan metode Pomodoro untuk\nbantu kamu tetap on track',
-      character: 'assets/images/gambar3.png',
-      waveImage: 'assets/images/wave_onboarding2.png',
+
+      character: AssetPaths.gambar3,
+
+      waveImage: AssetPaths.waveOnboarding2,
     ),
 
     // ===== ONBOARDING 3 =====
     _OBData(
       titleLines: <String>['Capai targetmu\nsetiap hari'],
+
       titleWithLogo: false,
+
       subtitle: 'Bangun kebiasaan fokus\ndan selesaikan tugasmu.',
-      character: 'assets/images/gambar4.png',
-      waveImage: 'assets/images/wave_onboarding3.png',
+
+      character: AssetPaths.gambar4,
+
+      waveImage: AssetPaths.waveOnboarding3,
     ),
   ];
 
@@ -71,17 +96,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     super.initState();
 
-    // Status bar
+    // ================= STATUS BAR =================
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+
         statusBarIconBrightness: Brightness.dark,
+
         systemNavigationBarColor: _cream,
+
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
 
-    // Auto slide onboarding
+    // ================= AUTO SLIDE =================
     _startTimer();
   }
 
@@ -92,19 +120,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _timer = Timer.periodic(const Duration(seconds: 3), (_) {
       if (!mounted) return;
 
-      // Kalau belum halaman terakhir
+      // ================= NEXT PAGE =================
       if (_page < _pages.length - 1) {
         _goTo(_page + 1);
       } else {
-        // Kalau sudah terakhir -> ke home
+        // ================= GO LOGIN =================
         _timer?.cancel();
 
-        context.go('/home');
+        context.go('/login');
       }
     });
   }
 
-  // ================= PINDAH PAGE =================
+  // ================= GO TO PAGE =================
   void _goTo(int index) {
     setState(() => _page = index);
 
@@ -117,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ================= PAGE CHANGED =================
+  // ================= ON PAGE CHANGED =================
   void _onPageChanged(int index) {
     setState(() => _page = index);
 
@@ -134,7 +162,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  //  UI
+  // ================= UI =================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,7 +171,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // ================= PAGEVIEW =
+            // ================= PAGE VIEW =================
             PageView.builder(
               controller: _ctrl,
 
@@ -165,8 +193,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Center(
                 child: _SpinnerIndicator(
                   page: _page,
+
                   total: _pages.length,
+
                   blue: _blue,
+
                   yellow: _yellow,
                 ),
               ),
@@ -184,11 +215,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         // ================= BACKGROUND WAVE =================
         Positioned.fill(child: Image.asset(data.waveImage, fit: BoxFit.cover)),
 
-        // ================= ISI PAGE =================
+        // ================= CONTENT =================
         SafeArea(
           child: Column(
             children: [
-              // ===== JARAK ATAS =====
+              // ================= TOP SPACE =================
               const SizedBox(height: 38),
 
               // ================= TITLE + SUBTITLE =================
@@ -201,7 +232,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     data.titleWithLogo
                         // ===== TITLE WITH LOGO =====
                         ? _buildLogoTitle()
-                        // ===== TITLE NORMAL =====
+                        // ===== NORMAL TITLE =====
                         : Text(
                             data.titleLines.first,
 
@@ -218,6 +249,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
 
+                    // ================= SPACE =================
                     const SizedBox(height: 14),
 
                     // ================= SUBTITLE =================
@@ -228,8 +260,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       style: GoogleFonts.poppins(
                         color: const Color(0xFF141414),
+
                         fontSize: 16,
+
                         fontWeight: FontWeight.w500,
+
                         height: 1.35,
                       ),
                     ),
@@ -261,7 +296,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ================= TITLE LOGO =================
+  // ================= TITLE WITH LOGO =================
   Widget _buildLogoTitle() {
     final TextStyle style = GoogleFonts.poppins(
       color: _dark,
@@ -275,10 +310,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     return Column(
       children: [
-        // ===== BARIS 1 =====
+        // ================= LINE 1 =================
         Text('Selamat datang', textAlign: TextAlign.center, style: style),
 
-        // ===== BARIS 2 =====
+        // ================= LINE 2 =================
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
 
@@ -287,12 +322,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             Text('di F', style: style),
 
-            // ===== LOGO =====
+            // ================= LOGO =================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 1),
 
               child: SvgPicture.asset(
-                'assets/icons/logo_blue.svg',
+                AssetPaths.logoBlue,
 
                 width: 22,
                 height: 22,
