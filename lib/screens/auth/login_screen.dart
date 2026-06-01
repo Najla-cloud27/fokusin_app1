@@ -17,13 +17,49 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // ================= CLOUDS =================
+            //  CLOUD LEFT
+            Positioned(
+              top: 212,
+              left: -43,
+              child: Opacity(
+                opacity: 0.53,
+                child: Image.asset(
+                  AssetPaths.loginCloud1,
+                  width: 250,
+                  height: 250,
+                ),
+              ),
+            ),
+
+            // ================= CLOUD CENTER =================
+            Positioned(
+              top: 202,
+              left: 101,
+              child: Opacity(
+                opacity: 0.53,
+                child: Image.asset(
+                  AssetPaths.loginCloud2,
+                  width: 250,
+                  height: 250,
+                ),
+              ),
+            ),
+
+            // ================= CLOUD RIGHT =================
             Positioned(
               top: 240,
-              left: 0,
-              right: 0,
-
-              child: Image.asset(AssetPaths.loginCloud1, fit: BoxFit.contain),
+              right: -40,
+              child: Transform.rotate(
+                angle: 3.14,
+                child: Opacity(
+                  opacity: 0.43,
+                  child: Image.asset(
+                    AssetPaths.loginCloud3,
+                    width: 175,
+                    height: 175,
+                  ),
+                ),
+              ),
             ),
 
             // ================= CONTENT =================

@@ -1,5 +1,5 @@
 class AssetPaths {
-  // ================= IMAGES =================
+  //  IMAGES
 
   static const waveOnboarding1 = 'assets/images/wave_onboarding1.png';
 
@@ -13,7 +13,7 @@ class AssetPaths {
 
   static const background2 = 'assets/images/background_2.png';
 
-  // ================= LOGIN / REGISTER =================
+  // LOGIN / REGISTER
 
   static const loginCharacter = 'assets/images/login_character.png';
 
@@ -23,7 +23,7 @@ class AssetPaths {
 
   static const loginCloud3 = 'assets/images/login_cloud3.png';
 
-  // ================= OTHER IMAGES =================
+  //  OTHER IMAGES
 
   static const gambar2 = 'assets/images/gambar2.png';
 
@@ -41,7 +41,7 @@ class AssetPaths {
 
   static const gambar9 = 'assets/images/gambar9.png';
 
-  // ================= ICONS =================
+  //  ICONS
 
   static const iconGoogle = 'assets/icons/icon_google.svg';
 
