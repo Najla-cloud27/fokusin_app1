@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokusin_app1/screens/auth/register_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fokusin_app1/screens/splash/splash_screen.dart';
@@ -72,6 +73,22 @@ final GoRouter appRouter = GoRouter(
                 return FadeTransition(opacity: animation, child: child);
               },
 
+          transitionDuration: const Duration(milliseconds: 400),
+        );
+      },
+    ),
+
+    // ini route untuk register
+    GoRoute(
+      path: '/register',
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: const RegisterScreen(),
+          transitionsBuilder:
+              (_, Animation<double> animation, __, Widget child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
           transitionDuration: const Duration(milliseconds: 400),
         );
       },

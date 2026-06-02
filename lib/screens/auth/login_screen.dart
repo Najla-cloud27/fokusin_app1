@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -13,106 +14,107 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bgColor,
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            // Spacer ini yang bertugas menaikkan KESELURUHAN ilustrasi (Karakter + Awan) ke atas
-            const Spacer(flex: 1),
-
             // ================= KOTAK ILUSTRASI (KARAKTER + AWAN) =================
-            Center(
-              child: SizedBox(
-                width: 393,
-                height: 380,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // 1. KARAKTER UTAMA
-                    Positioned(
-                      top:
-                          0, // KEMBALIKAN KE 0: Agar awan menutupi piring dan kaki dengan pas!
-                      left: (393 - 235) / 2,
-                      width: 235,
-                      child: Image.asset(
-                        AssetPaths.loginCharacter,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-
-                    // 2. CLOUD LEFT
-                    Positioned(
-                      left: -43,
-                      top: 152,
-                      width: 250,
-                      height: 250,
-                      child: Opacity(
-                        opacity: 0.53,
+            SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: 393,
+                  height: 380,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // 1. KARAKTER UTAMA
+                      Positioned(
+                        top: 0,
+                        left: (393 - 235) / 2,
+                        width: 235,
                         child: Image.asset(
-                          AssetPaths.loginCloud1,
+                          AssetPaths.loginCharacter,
                           fit: BoxFit.contain,
                         ),
                       ),
-                    ),
 
-                    // 3. CLOUD CENTER
-                    Positioned(
-                      left: 101,
-                      top: 142,
-                      width: 250,
-                      height: 250,
-                      child: Opacity(
-                        opacity: 0.53,
-                        child: Image.asset(
-                          AssetPaths.loginCloud2,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-
-                    // 4. CLOUD RIGHT
-                    Positioned(
-                      left: 283,
-                      top: 180,
-                      width: 175,
-                      height: 175,
-                      child: Opacity(
-                        opacity: 0.43,
-                        child: Transform.rotate(
-                          angle: 3.14159,
+                      // 2. CLOUD LEFT
+                      Positioned(
+                        left: -43,
+                        top: 152,
+                        width: 250,
+                        height: 250,
+                        child: Opacity(
+                          opacity: 0.53,
                           child: Image.asset(
-                            AssetPaths.loginCloud3,
+                            AssetPaths.loginCloud1,
                             fit: BoxFit.contain,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+
+                      // 3. CLOUD CENTER
+                      Positioned(
+                        left: 101,
+                        top: 142,
+                        width: 250,
+                        height: 250,
+                        child: Opacity(
+                          opacity: 0.53,
+                          child: Image.asset(
+                            AssetPaths.loginCloud2,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+
+                      // 4. CLOUD RIGHT
+                      Positioned(
+                        left: 283,
+                        top: 180,
+                        width: 175,
+                        height: 175,
+                        child: Opacity(
+                          opacity: 0.43,
+                          child: Transform.rotate(
+                            angle: 3.14159,
+                            child: Image.asset(
+                              AssetPaths.loginCloud3,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
 
-            // Spacer ini membagi jarak dinamis antara awan dan teks
-            const Spacer(flex: 2),
+            const SizedBox(height: 20),
 
             // ================= BAGIAN TEKS DAN TOMBOL =================
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // TEKS JUDUL
-                  const Text(
+                  // TEKS JUDUL (Menggunakan Poppins)
+                  Text(
                     'Masuk untuk Fokusin',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: _dark,
                     ),
+                    textAlign: TextAlign.left,
                   ),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 24),
 
-                  // TOMBOL GOOGLE
+                  // TOMBOL GOOGLE (Desain dipertahankan, teks diubah ke Poppins)
                   Container(
                     height: 58,
                     padding: const EdgeInsets.all(4),
@@ -141,9 +143,9 @@ class LoginScreen extends StatelessWidget {
                                 width: 24,
                               ),
                               const SizedBox(width: 14),
-                              const Text(
+                              Text(
                                 'Lanjutkan dengan Google',
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
@@ -158,12 +160,12 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 36),
 
-                  // LINK DAFTAR
+                  // LINK DAFTAR (Menggunakan Poppins)
                   Center(
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         text: 'Belum punya akun? ',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           color: _dark,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -171,7 +173,7 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: 'Daftar',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: _blue,
                               fontWeight: FontWeight.w700,
                             ),
@@ -180,10 +182,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  const SizedBox(
-                    height: 60,
-                  ), // Margin bawah agar tidak mentok batas layar
+                  const SizedBox(height: 60),
                 ],
               ),
             ),
