@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fokusin_app1/screens/auth/register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
 
@@ -17,91 +20,19 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ================= KOTAK ILUSTRASI (KARAKTER + AWAN) =================
-            SizedBox(
-              width: double.infinity,
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  width: 393,
-                  height: 380,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // 1. KARAKTER UTAMA
-                      Positioned(
-                        top: 0,
-                        left: (393 - 235) / 2,
-                        width: 235,
-                        child: Image.asset(
-                          AssetPaths.loginCharacter,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+            // ================= COMPONENT ILUSTRASI =================
+            const _AuthIllustrationHeader(),
 
-                      // 2. CLOUD LEFT
-                      Positioned(
-                        left: -43,
-                        top: 152,
-                        width: 250,
-                        height: 250,
-                        child: Opacity(
-                          opacity: 0.53,
-                          child: Image.asset(
-                            AssetPaths.loginCloud1,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-
-                      // 3. CLOUD CENTER
-                      Positioned(
-                        left: 101,
-                        top: 142,
-                        width: 250,
-                        height: 250,
-                        child: Opacity(
-                          opacity: 0.53,
-                          child: Image.asset(
-                            AssetPaths.loginCloud2,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-
-                      // 4. CLOUD RIGHT
-                      Positioned(
-                        left: 283,
-                        top: 180,
-                        width: 175,
-                        height: 175,
-                        child: Opacity(
-                          opacity: 0.43,
-                          child: Transform.rotate(
-                            angle: 3.14159,
-                            child: Image.asset(
-                              AssetPaths.loginCloud3,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
+            // Jarak diperbesar agar form lebih turun ke tengah
             const SizedBox(height: 20),
 
-            // ================= BAGIAN TEKS DAN TOMBOL =================
+            // ================= BAGIAN FORM & BUTTON =================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // TEKS JUDUL (Menggunakan Poppins)
+                  // Teks Dibuat Rata Tengah (Center)
                   Text(
                     'Masuk untuk Fokusin',
                     style: GoogleFonts.poppins(
@@ -112,9 +43,9 @@ class LoginScreen extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
-                  // TOMBOL GOOGLE (Desain dipertahankan, teks diubah ke Poppins)
+                  // TOMBOL GOOGLE
                   Container(
                     height: 58,
                     padding: const EdgeInsets.all(4),
@@ -160,7 +91,7 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 36),
 
-                  // LINK DAFTAR (Menggunakan Poppins)
+                  // LINK PINDAH KE REGISTER (Sudah di tengah)
                   Center(
                     child: RichText(
                       text: TextSpan(
@@ -177,6 +108,16 @@ class LoginScreen extends StatelessWidget {
                               color: _blue,
                               fontWeight: FontWeight.w700,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterScreen(),
+                                  ),
+                                );
+                              },
                           ),
                         ],
                       ),
@@ -184,6 +125,110 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 60),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ================= WIDGET ILUSTRASI HEADER =================
+// Gunakan kode _AuthIllustrationHeader yang terakhir kali kita sepakati
+class _AuthIllustrationHeader extends StatelessWidget {
+  const _AuthIllustrationHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth > 450) {
+      screenWidth = 450;
+    }
+
+    final double scale = screenWidth / 390;
+
+    final double logoWidth = 285 * scale;
+    final double logoHeight = 327 * scale;
+    final double logoTop = 49 * scale;
+    final double logoLeft = 56 * scale;
+
+    final double cloud1Width = 250 * scale;
+    final double cloud1Height = 250 * scale;
+    final double cloud1Left = -43 * scale;
+
+    final double cloud2Width = 250 * scale;
+    final double cloud2Height = 250 * scale;
+    final double cloud2Left = 101 * scale;
+
+    final double cloud3Width = 175 * scale;
+    final double cloud3Height = 175 * scale;
+    final double cloud3Left = 283 * scale;
+
+    final double cloud1Top = 192 * scale;
+    final double cloud2Top = 182 * scale;
+    final double cloud3Top = 220 * scale;
+
+    final double headerHeight = 380 * scale;
+
+    return Center(
+      child: SizedBox(
+        width: screenWidth,
+        height: headerHeight,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: logoTop,
+              left: logoLeft,
+              child: Image.asset(
+                AssetPaths.loginCharacter,
+                width: logoWidth,
+                height: logoHeight,
+                fit: BoxFit.contain,
+              ),
+            ),
+            Positioned(
+              top: cloud1Top,
+              left: cloud1Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Image.asset(
+                  AssetPaths.loginCloud1,
+                  width: cloud1Width,
+                  height: cloud1Height,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              top: cloud3Top,
+              left: cloud3Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Transform.rotate(
+                  angle: -180 * math.pi / 180,
+                  child: Image.asset(
+                    AssetPaths.loginCloud3,
+                    width: cloud3Width,
+                    height: cloud3Height,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: cloud2Top,
+              left: cloud2Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Image.asset(
+                  AssetPaths.loginCloud2,
+                  width: cloud2Width,
+                  height: cloud2Height,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ],

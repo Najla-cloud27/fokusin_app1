@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:fokusin_app1/screens/auth/register_screen.dart';
 import 'package:go_router/go_router.dart';
 
+// --- Imports Screen ---
 import 'package:fokusin_app1/screens/splash/splash_screen.dart';
 import 'package:fokusin_app1/screens/splash/splash_cream_screen.dart';
-
 import 'package:fokusin_app1/screens/onboarding/onboarding_screen.dart';
-
 import 'package:fokusin_app1/screens/auth/login_screen.dart';
+import 'package:fokusin_app1/screens/auth/register_screen.dart';
+import 'package:fokusin_app1/screens/home/home_screen.dart'; // <-- Import HomeScreen yang baru ditambahkan
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation:
+      '/', // Ubah ke '/home' jika kamu ingin langsung testing halaman Home pas aplikasi dibuka
 
   routes: <RouteBase>[
     // ───────── SPLASH SCREEN ─────────
@@ -27,14 +28,11 @@ final GoRouter appRouter = GoRouter(
       pageBuilder: (BuildContext context, GoRouterState state) {
         return CustomTransitionPage<void>(
           key: state.pageKey,
-
           child: const SplashCreamScreen(),
-
           transitionsBuilder:
               (_, Animation<double> animation, __, Widget child) {
                 return FadeTransition(opacity: animation, child: child);
               },
-
           transitionDuration: const Duration(milliseconds: 500),
         );
       },
@@ -46,14 +44,11 @@ final GoRouter appRouter = GoRouter(
       pageBuilder: (BuildContext context, GoRouterState state) {
         return CustomTransitionPage<void>(
           key: state.pageKey,
-
           child: const OnboardingScreen(),
-
           transitionsBuilder:
               (_, Animation<double> animation, __, Widget child) {
                 return FadeTransition(opacity: animation, child: child);
               },
-
           transitionDuration: const Duration(milliseconds: 400),
         );
       },
@@ -65,20 +60,17 @@ final GoRouter appRouter = GoRouter(
       pageBuilder: (BuildContext context, GoRouterState state) {
         return CustomTransitionPage<void>(
           key: state.pageKey,
-
           child: const LoginScreen(),
-
           transitionsBuilder:
               (_, Animation<double> animation, __, Widget child) {
                 return FadeTransition(opacity: animation, child: child);
               },
-
           transitionDuration: const Duration(milliseconds: 400),
         );
       },
     ),
 
-    // ini route untuk register
+    // ───────── REGISTER ─────────
     GoRoute(
       path: '/register',
       pageBuilder: (BuildContext context, GoRouterState state) {
@@ -97,32 +89,19 @@ final GoRouter appRouter = GoRouter(
     // ───────── HOME ─────────
     GoRoute(
       path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        return const _PlaceholderHome();
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: const HomeScreen(), // <-- Memanggil HomeScreen asli di sini
+          transitionsBuilder:
+              (_, Animation<double> animation, __, Widget child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+          transitionDuration: const Duration(milliseconds: 400),
+        );
       },
     ),
   ],
 );
 
-/// HOME SEMENTARA
-class _PlaceholderHome extends StatelessWidget {
-  const _PlaceholderHome();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFFFFF8E4),
-
-      body: Center(
-        child: Text(
-          'Home Page',
-          style: TextStyle(
-            fontSize: 24,
-            color: Color(0xFF1A1A2E),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-}
+// Note: Class _PlaceholderHome sudah dihapus karena kita sudah punya HomeScreen aslinya!

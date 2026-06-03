@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
@@ -8,8 +10,6 @@ class RegisterScreen extends StatelessWidget {
   static const Color _bgColor = Color(0xFFFFF8E4);
   static const Color _blue = Color(0xFF2F9BF4);
   static const Color _dark = Color(0xFF1A1A2E);
-  static const Color _lightBlueFill = Color(0xFFEAF4FC);
-  static const Color _borderColor = Color(0xFF8FD0FF);
 
   @override
   Widget build(BuildContext context) {
@@ -18,84 +18,18 @@ class RegisterScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ================= KOTAK ILUSTRASI =================
-            SizedBox(
-              width: double.infinity,
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  width: 393,
-                  height: 380,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: (393 - 235) / 2,
-                        width: 235,
-                        child: Image.asset(
-                          AssetPaths.loginCharacter,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Positioned(
-                        left: -43,
-                        top: 152,
-                        width: 250,
-                        height: 250,
-                        child: Opacity(
-                          opacity: 0.53,
-                          child: Image.asset(
-                            AssetPaths.loginCloud1,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 101,
-                        top: 142,
-                        width: 250,
-                        height: 250,
-                        child: Opacity(
-                          opacity: 0.53,
-                          child: Image.asset(
-                            AssetPaths.loginCloud2,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 283,
-                        top: 180,
-                        width: 175,
-                        height: 175,
-                        child: Opacity(
-                          opacity: 0.43,
-                          child: Transform.rotate(
-                            angle: 3.14159,
-                            child: Image.asset(
-                              AssetPaths.loginCloud3,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // ================= COMPONENT ILUSTRASI =================
+            const _AuthIllustrationHeader(),
 
             const SizedBox(height: 20),
 
-            // ================= AREA FORM DAFTAR =================
+            // ================= BAGIAN FORM & BUTTON =================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Judul Poppins
+                  // Teks Judul
                   Text(
                     'Daftar untuk Fokusin',
                     style: GoogleFonts.poppins(
@@ -106,102 +40,256 @@ class RegisterScreen extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
-                  // TEXTFIELD: Email (Input & Hint Poppins)
-                  TextField(
-                    style: GoogleFonts.poppins(color: _dark),
-                    decoration: InputDecoration(
-                      hintText: 'Email Anda',
-                      hintStyle: GoogleFonts.poppins(color: Colors.black38),
-                      filled: true,
-                      fillColor: _lightBlueFill,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 24,
+                  // TEXTFIELD EMAIL
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        34,
+                      ), // Disesuaikan agar tetap bulat sempurna
+                      border: Border.all(
+                        color: const Color(0xFF7AC5FF),
+                        width:
+                            4.0, // 👈 Dinaikkan ke 4.0 supaya tebal & kelihatan jelas seperti di Figma
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(36),
-                        borderSide: const BorderSide(
-                          color: _borderColor,
-                          width: 2,
+                    ),
+                    padding: const EdgeInsets.all(
+                      4,
+                    ), // 👈 Dinaikkan ke 4 biar jarak gap-nya pas
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE3F2FD),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Email Anda',
+                          hintStyle: GoogleFonts.poppins(
+                            color: const Color(0xFF929292),
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 22,
+                            vertical: 14,
+                          ),
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(36),
-                        borderSide: const BorderSide(color: _blue, width: 2),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
-                  // TEXTFIELD: Password (Input & Hint Poppins)
-                  TextField(
-                    obscureText: true,
-                    style: GoogleFonts.poppins(color: _dark),
-                    decoration: InputDecoration(
-                      hintText: 'Masukkan Password Anda',
-                      hintStyle: GoogleFonts.poppins(color: Colors.black38),
-                      filled: true,
-                      fillColor: _lightBlueFill,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 24,
+                  // TEXTFIELD PASSWORD
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(34),
+                      border: Border.all(
+                        color: const Color(0xFF7AC5FF),
+                        width: 4.0, // 👈 Dinaikkan ke 4.0 juga agar seimbang
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(36),
-                        borderSide: const BorderSide(
-                          color: _borderColor,
-                          width: 2,
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE3F2FD),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: 'Masukkan Password Anda',
+                          hintStyle: GoogleFonts.poppins(
+                            color: const Color(0xFF929292),
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 22,
+                            vertical: 14,
+                          ),
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(36),
-                        borderSide: const BorderSide(color: _blue, width: 2),
-                      ),
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  // Note: Teks "Forgot Password" dihapus karena di design Figma Register tidak ada
+                  const SizedBox(height: 32),
 
-                  // FORGOT PASSWORD Poppins
-                  Text(
-                    'Forgot Password',
-                    textAlign: TextAlign.right,
-                    style: GoogleFonts.poppins(
-                      color: _dark,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // TOMBOL LOGIN Poppins
-                  SizedBox(
+                  // ================= TOMBOL DAFTAR =================
+                  Container(
                     height: 58,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(36),
-                        ),
-                        elevation: 0,
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(36),
+                      border: Border.all(
+                        color: const Color(0xFF8FD0FF),
+                        width: 4,
                       ),
-                      child: Text(
-                        'Login',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: _blue,
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(32),
+                          onTap: () {
+                            //  Fungsi Register Anda
+                          },
+                          child: Center(
+                            child: Text(
+                              'Daftar', // 👈 Teks diubah dari Login menjadi Daftar
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 36),
+
+                  // ================= LINK PINDAH KE LOGIN =================
+                  Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Sudah punya akun? ',
+                        style: GoogleFonts.poppins(
+                          color: _dark,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Masuk',
+                            style: GoogleFonts.poppins(
+                              color: _blue,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Kembali ke halaman Login screen sebelumnya
+                                Navigator.pop(context);
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 60),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ================= WIDGET ILUSTRASI HEADER =================
+class _AuthIllustrationHeader extends StatelessWidget {
+  const _AuthIllustrationHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth > 450) {
+      screenWidth = 450;
+    }
+
+    final double scale = screenWidth / 390;
+
+    final double logoWidth = 285 * scale;
+    final double logoHeight = 327 * scale;
+    final double logoTop = 49 * scale;
+    final double logoLeft = 56 * scale;
+
+    final double cloud1Width = 250 * scale;
+    final double cloud1Height = 250 * scale;
+    final double cloud1Left = -43 * scale;
+
+    final double cloud2Width = 250 * scale;
+    final double cloud2Height = 250 * scale;
+    final double cloud2Left = 101 * scale;
+
+    final double cloud3Width = 175 * scale;
+    final double cloud3Height = 175 * scale;
+    final double cloud3Left = 283 * scale;
+
+    final double cloud1Top = 192 * scale;
+    final double cloud2Top = 182 * scale;
+    final double cloud3Top = 220 * scale;
+
+    final double headerHeight = 380 * scale;
+
+    return Center(
+      child: SizedBox(
+        width: screenWidth,
+        height: headerHeight,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: logoTop,
+              left: logoLeft,
+              child: Image.asset(
+                AssetPaths.loginCharacter,
+                width: logoWidth,
+                height: logoHeight,
+                fit: BoxFit.contain,
+              ),
+            ),
+            Positioned(
+              top: cloud1Top,
+              left: cloud1Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Image.asset(
+                  AssetPaths.loginCloud1,
+                  width: cloud1Width,
+                  height: cloud1Height,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              top: cloud3Top,
+              left: cloud3Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Transform.rotate(
+                  angle: -180 * math.pi / 180,
+                  child: Image.asset(
+                    AssetPaths.loginCloud3,
+                    width: cloud3Width,
+                    height: cloud3Height,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: cloud2Top,
+              left: cloud2Left,
+              child: Opacity(
+                opacity: 0.90,
+                child: Image.asset(
+                  AssetPaths.loginCloud2,
+                  width: cloud2Width,
+                  height: cloud2Height,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ],
