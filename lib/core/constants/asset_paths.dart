@@ -23,6 +23,9 @@ class AssetPaths {
 
   static const loginCloud3 = 'assets/images/login_cloud3.png';
 
+  // 👇 TAMBAHKAN BARIS INI 👇
+  static const ilustrasiAmankanAkun = 'assets/images/ilustrasi_amankan_akun.png';
+
   //  OTHER IMAGES
 
   static const gambar2 = 'assets/images/gambar2.png';

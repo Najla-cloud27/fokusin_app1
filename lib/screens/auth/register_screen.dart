@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fokusin_app1/screens/auth/google_auth_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
 
@@ -137,9 +138,7 @@ class RegisterScreen extends StatelessWidget {
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(32),
-                          onTap: () {
-                            //  Fungsi Register Anda
-                          },
+                          onTap: () {},
                           child: Center(
                             child: Text(
                               'Daftar', // 👈 Teks diubah dari Login menjadi Daftar

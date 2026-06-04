@@ -2,8 +2,11 @@ import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokusin_app1/screens/auth/register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// Pastikan import ini sesuai dengan struktur folder kamu
+import 'package:fokusin_app1/screens/auth/register_screen.dart';
+import 'package:fokusin_app1/screens/auth/google_auth_popup.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -24,7 +27,7 @@ class LoginScreen extends StatelessWidget {
             const _AuthIllustrationHeader(),
 
             // Jarak diperbesar agar form lebih turun ke tengah
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             // ================= BAGIAN FORM & BUTTON =================
             Padding(
@@ -45,7 +48,7 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // TOMBOL GOOGLE
+                  // ================= TOMBOL GOOGLE =================
                   Container(
                     height: 58,
                     padding: const EdgeInsets.all(4),
@@ -65,7 +68,20 @@ class LoginScreen extends StatelessWidget {
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(32),
-                          onTap: () {},
+                          onTap: () {
+                            // 👇 UBAH JADI SHOWDIALOG AGAR MUNCUL DI TENGAH 👇
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  surfaceTintColor: Colors.transparent,
+                                  // Memanggil file popup kamu
+                                  child: GoogleAuthPopup(),
+                                );
+                              },
+                            );
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -91,7 +107,7 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 36),
 
-                  // LINK PINDAH KE REGISTER (Sudah di tengah)
+                  // ================= LINK PINDAH KE REGISTER =================
                   Center(
                     child: RichText(
                       text: TextSpan(
@@ -135,7 +151,6 @@ class LoginScreen extends StatelessWidget {
 }
 
 // ================= WIDGET ILUSTRASI HEADER =================
-// Gunakan kode _AuthIllustrationHeader yang terakhir kali kita sepakati
 class _AuthIllustrationHeader extends StatelessWidget {
   const _AuthIllustrationHeader();
 

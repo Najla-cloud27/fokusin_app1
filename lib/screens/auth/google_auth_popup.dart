@@ -1,98 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:fokusin_app1/core/constants/asset_paths.dart';
+import 'package:fokusin_app1/core/constants/asset_paths.dart'; // Pastikan path ini sesuai jika diperlukan
 
 class GoogleAuthPopup extends StatelessWidget {
   const GoogleAuthPopup({super.key});
 
-  static const Color _bgColor = Color(0xFFFFF8E4);
-  static const Color _blue = Color(0xFF2F9BF4);
-  static const Color _dark = Color(0xFF1A1A2E);
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: _bgColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // Agar popup tingginya menyesuaikan isi
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // ================= ILUSTRASI =================
-          Center(
-            child: Image.asset(
-              'assets/images/ilustrasi_amankan_akun.png', // Pastikan nama gambar sesuai di foldermu
-              height: 200,
-              fit: BoxFit.contain,
+    return Center(
+      child: Container(
+        width: 330, // Lebar ideal
+        // Padding vertical diperbesar (36) agar card otomatis memanjang ke bawah sesuai Figma
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFDF4), // Warna cream bersih untuk card
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 25,
+              offset: const Offset(0, 10),
             ),
-          ),
-
-          const SizedBox(height: 32),
-
-          // ================= TEKS JUDUL =================
-          Text(
-            'Amankan Akunmu\ndengan verifikasi\nmudah',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: _dark,
-              height: 1.3,
+          ],
+        ),
+        child: Column(
+          mainAxisSize:
+              MainAxisSize.min, // Membuat card fleksibel mengikuti panjang isi
+          children: [
+            // Ikon Google (Gunakan SVG jika ada di AssetPaths, atau pakai path manual)
+            SvgPicture.asset(
+              'assets/icons/icon_google.svg',
+              width: 32,
+              height: 32,
             ),
-            textAlign: TextAlign.left,
-          ),
+            const SizedBox(height: 18),
 
-          const SizedBox(height: 32),
-
-          // ================= TOMBOL GOOGLE (DUMMY) =================
-          Container(
-            height: 58,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(36),
-              border: Border.all(color: const Color(0xFF8FD0FF), width: 4),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: _blue,
-                borderRadius: BorderRadius.circular(32),
+            // Judul Dialog
+            const Text(
+              'Pilih akun Google',
+              textAlign:
+                  TextAlign.center, // <--- Pindah ke sini (di luar TextStyle)
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A1A2E),
               ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(32),
-                  onTap: () {
-                    // Menutup popup saat tombol diklik (karena masih dummy)
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            const SizedBox(height: 6),
+
+            // Subtitle Dialog
+            const Text(
+              'Untuk melanjutkan ke fokusin',
+              textAlign:
+                  TextAlign.center, // <--- Pindah ke sini (di luar TextStyle)
+              style: TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+
+            const SizedBox(
+              height: 36,
+            ), // Jarak renggang yang memberi kesan memanjang
+            // Baris Informasi Profil Akun
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black12, width: 0.5),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage(
+                      'assets/images/profil.png',
+                    ), // Foto profil lokalmu
+                  ),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(
-                        AssetPaths.iconGoogle, // Ikon Google SVG
-                        width: 24,
-                      ),
-                      const SizedBox(width: 14),
                       Text(
-                        'Lanjutkan dengan Google',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
+                        'Anna syla',
+                        style: TextStyle(
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          color: Color(0xFF1A1A2E),
                         ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'annasyla@gmail.com',
+                        style: TextStyle(fontSize: 11, color: Colors.black45),
                       ),
                     ],
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 18),
+
+            // Garis Pembatas Tipis Samar di bawah email (Sesuai Figma)
+            const Divider(color: Colors.black12, thickness: 0.8),
+            const SizedBox(height: 18),
+
+            // Tombol Tambahkan Akun Lain
+            InkWell(
+              onTap: () {
+                // Tambahkan aksi navigasi atau logika di sini
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    // Ikon Vector_contact SVG dari aset kamu
+                    SvgPicture.asset(
+                      'assets/icons/Vector_contact.svg',
+                      width: 22,
+                      height: 22,
+                    ),
+                    const SizedBox(width: 14),
+                    const Text(
+                      'Tambahkan akun lain',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1976D2), // Warna biru figma
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-
-          const SizedBox(height: 24),
-        ],
+          ],
+        ),
       ),
     );
   }
