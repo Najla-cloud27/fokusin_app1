@@ -23,13 +23,13 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ================= COMPONENT ILUSTRASI =================
+            //  COMPONENT ILUSTRASI
             const _AuthIllustrationHeader(),
 
             // Jarak diperbesar agar form lebih turun ke tengah
             const SizedBox(height: 25),
 
-            // ================= BAGIAN FORM & BUTTON =================
+            //BAGIAN FORM & BUTTON
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // ================= TOMBOL GOOGLE =================
+                  //  TOMBOL GOOGLE
                   Container(
                     height: 58,
                     padding: const EdgeInsets.all(4),
@@ -107,7 +107,7 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 36),
 
-                  // ================= LINK PINDAH KE REGISTER =================
+                  //  LINK PINDAH KE REGISTER
                   Center(
                     child: RichText(
                       text: TextSpan(

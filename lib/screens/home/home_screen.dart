@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Import package SVG
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,12 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text(
           'Pomodoro',
           style: TextStyle(
+            fontFamily: 'Poppins',
             color: Colors.white,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
-        // Menggunakan logo_white.svg dari aset kamu
         leading: IconButton(
           icon: SvgPicture.asset(
             'assets/icons/logo_white.svg',
@@ -78,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const CircleAvatar(
                       radius: 30,
+                      backgroundColor: Color(0xFF8FD0FF), // Warna cadangan
                       backgroundImage: AssetImage('assets/images/profil.png'),
                     ),
                     const SizedBox(width: 15),
@@ -88,24 +89,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Anna syla',
                             style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
+                            maxLines: 1, // Pengaman agar tidak turun ke bawah
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             'Profil Ku',
                             style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: Colors.black54,
                               fontSize: 14,
                             ),
+                            maxLines: 1, // Pengaman agar tidak turun ke bawah
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
+                    // TOMBOL EDIT DENGAN IKON CUSTOM & PENGAMAN
                     IconButton(
-                      icon: const Icon(Icons.edit_outlined, color: Colors.blue),
-                      onPressed: () {},
+                      icon: SvgPicture.asset(
+                        'assets/icons/mingcute_pencil.svg', // <-- Path, ejaan, dan ekstensi sudah benar
+                        width: 24,
+                        height: 24,
+                      ),
+                      onPressed: () {
+                        // Aksi ketika tombol edit ditekan
+                      },
                     ),
                   ],
                 ),
@@ -117,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 10),
 
-            // Menu Items (Menggunakan ikon SVG lokalmu)
+            // Menu Items/ Menu SIdebar KIRI
             _buildLeftDrawerItem(
               title: 'Pomodoro',
               svgPath: 'assets/icons/Vector.svg',
@@ -129,12 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             _buildLeftDrawerItem(
               title: 'Progres Ku',
-              svgPath: 'assets/icons/list_star.svg',
+              svgPath: 'assets/icons/icon_progress.svg',
             ),
-            // Untuk Keluar, tetap pakai Icon bawaan karena sepertinya belum ada di list aset svg-mu
             _buildLeftDrawerItem(
               title: 'Keluar',
-              svgPath: 'assets/icons/tabler_logout.svg',
+              svgPath: 'assets/icons/tabler_logout-2.svg',
               isRed: true,
             ),
 
@@ -145,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // Menggunakan logo biru untuk footer "Tentang Kami"
               leading: SvgPicture.asset(
                 'assets/icons/logo_blue.svg',
                 width: 24,
@@ -154,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text(
                 'Tentang kami',
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
                 ),
@@ -183,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       'Latar Belakang',
                       style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
@@ -196,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   'Pilih latar belakang bawaan',
                   style: TextStyle(
+                    fontFamily: 'Poppins',
                     fontSize: 15,
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
@@ -212,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   'Atau gunakan warna solid',
                   style: TextStyle(
+                    fontFamily: 'Poppins',
                     fontSize: 15,
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
@@ -271,6 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   '00:00',
                   style: TextStyle(
+                    fontFamily: 'Poppins',
                     fontSize: 64,
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
@@ -280,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 40),
 
-            // Tombol Batalkan Transparan dengan Ikon SVG Custom
+            // Tombol Batalkan
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black.withOpacity(0.35),
@@ -296,13 +313,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               icon: SvgPicture.asset(
-                'assets/icons/cancel_white.svg', // Menggunakan ikon cancel dari aset
+                'assets/icons/cancel_white.svg',
                 width: 16,
                 height: 16,
               ),
               label: const Text(
                 'Batalkan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               onPressed: () {},
             ),
@@ -316,7 +337,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // HELPER WIDGETS
   // ==========================================
 
-  // Modifikasi Helper Drawer: Bisa menerima format SVG atau Icon Data standar
   Widget _buildLeftDrawerItem({
     required String title,
     String? svgPath,
@@ -343,15 +363,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   svgPath,
                   width: 24,
                   height: 24,
-                  colorFilter: ColorFilter.mode(
-                    itemColor,
-                    BlendMode.srcIn,
-                  ), // Warnai SVG sesuai kondisi aktif/tidak
+                  colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
                 )
               : Icon(iconData, color: itemColor),
           title: Text(
             title,
             style: TextStyle(
+              fontFamily: 'Poppins',
               color: itemColor,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               fontSize: 16,
