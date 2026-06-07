@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fokusin_app1/drawer/custom_sidebar_kategori.dart';
+import 'package:fokusin_app1/screens/kategori/kelola_kategori_page.dart';
+import 'package:fokusin_app1/screens/progress/progress_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -66,116 +69,29 @@ class _HomeScreenState extends State<HomeScreen> {
       // ==========================================
       // SIDEBAR KIRI (Drawer - Profil & Navigasi)
       // ==========================================
-      drawer: Drawer(
-        backgroundColor: _drawerBgColor,
-        child: Column(
-          children: [
-            SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Color(0xFF8FD0FF), // Warna cadangan
-                      backgroundImage: AssetImage('assets/images/profil.png'),
-                    ),
-                    const SizedBox(width: 15),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Anna syla',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                            maxLines: 1, // Pengaman agar tidak turun ke bawah
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Profil Ku',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.black54,
-                              fontSize: 14,
-                            ),
-                            maxLines: 1, // Pengaman agar tidak turun ke bawah
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // TOMBOL EDIT DENGAN IKON CUSTOM & PENGAMAN
-                    IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/mingcute_pencil.svg', // <-- Path, ejaan, dan ekstensi sudah benar
-                        width: 24,
-                        height: 24,
-                      ),
-                      onPressed: () {
-                        // Aksi ketika tombol edit ditekan
-                      },
-                    ),
-                  ],
-                ),
+      drawer: CustomSidebarKategori(
+        selectedIndex: 0,
+        onItemSelected: (index) {
+          if (index == 0) {
+            // 1. Pomodoro: Sudah di Home, biarkan laci tertutup sendiri
+          } else if (index == 1) {
+            // 2. List Kategori: Pindah ke KelolaKategoriPage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const KelolaKategoriPage(),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(color: Colors.black12, thickness: 1),
-            ),
-            const SizedBox(height: 10),
-
-            // Menu Items/ Menu SIdebar KIRI
-            _buildLeftDrawerItem(
-              title: 'Pomodoro',
-              svgPath: 'assets/icons/Vector.svg',
-              isSelected: true,
-            ),
-            _buildLeftDrawerItem(
-              title: 'List Kategori',
-              svgPath: 'assets/icons/list_star.svg',
-            ),
-            _buildLeftDrawerItem(
-              title: 'Progres Ku',
-              svgPath: 'assets/icons/icon_progress.svg',
-            ),
-            _buildLeftDrawerItem(
-              title: 'Keluar',
-              svgPath: 'assets/icons/tabler_logout-2.svg',
-              isRed: true,
-            ),
-
-            const Spacer(),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(color: Colors.black12, thickness: 1),
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
-              leading: SvgPicture.asset(
-                'assets/icons/logo_blue.svg',
-                width: 24,
-                height: 24,
-              ),
-              title: const Text(
-                'Tentang kami',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              onTap: () {},
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+            );
+          } else if (index == 2) {
+            // 3. Progres Ku: Pindah ke ProgressScreen (Ubah bagian ini!) 👇
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ProgressScreen()),
+            );
+          } else if (index == 3) {
+            // 4. Keluar: Dikecualikan (Sesuai permintaanmu, tidak melakukan navigasi apa-apa)
+          }
+        },
       ),
 
       // ==========================================
@@ -189,11 +105,18 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.wallpaper, color: Colors.blue, size: 26),
-                    SizedBox(width: 12),
-                    Text(
+                    // INI ICON FILE MILIKMU YANG BARU
+                    SvgPicture.asset(
+                      'assets/icons/Vector_latarBelakang.svg',
+                      width: 26,
+                      height: 26,
+                    ),
+                    // Pindahkan kata const ke sini
+                    const SizedBox(width: 12),
+                    const Text(
+                      // Pindahkan kata const ke sini juga
                       'Latar Belakang',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -235,13 +158,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // Opsi Warna
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Opsi Warna Solid (Sudah Sesuai 100% dengan #FFCB33, #FFF8E4, #EC8DBE)
+                // Opsi Warna Solid (Berjejer ke bawah sesuai Figma)
+                Column(
                   children: [
-                    _buildColorOption(const Color(0xFFFFCA28)),
-                    _buildColorOption(const Color(0xFFFDF6E3)),
-                    _buildColorOption(const Color(0xFFF48FB1)),
+                    _buildColorOption(
+                      const Color(0xFFFFCB33),
+                    ), // #FFCB33 - Kuning
+                    const SizedBox(height: 12), // Jarak ke bawah
+                    _buildColorOption(
+                      const Color(0xFFFFF8E4),
+                    ), // #FFF8E4 - Krem
+                    const SizedBox(height: 12),
+                    _buildColorOption(
+                      const Color(0xFFEC8DBE),
+                    ), // #EC8DBE - Pink
                   ],
                 ),
               ],
@@ -333,54 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==========================================
-  // HELPER WIDGETS
-  // ==========================================
-
-  Widget _buildLeftDrawerItem({
-    required String title,
-    String? svgPath,
-    IconData? iconData,
-    bool isSelected = false,
-    bool isRed = false,
-  }) {
-    Color itemColor = isSelected
-        ? Colors.white
-        : (isRed ? Colors.red : Colors.black87);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-      child: Container(
-        decoration: isSelected
-            ? BoxDecoration(
-                color: const Color(0xFF1976D2),
-                borderRadius: BorderRadius.circular(30),
-              )
-            : null,
-        child: ListTile(
-          leading: svgPath != null
-              ? SvgPicture.asset(
-                  svgPath,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
-                )
-              : Icon(iconData, color: itemColor),
-          title: Text(
-            title,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              color: itemColor,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-              fontSize: 16,
-            ),
-          ),
-          onTap: () {},
-        ),
-      ),
-    );
-  }
-
+  // ini tuh bagian yang atur asset path gmbar
   Widget _buildImageOption(String assetPath) {
     bool isCurrent = _isImageBg && _currentBgPath == assetPath;
 
@@ -433,22 +317,25 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
       child: Container(
-        height: 60,
-        width: 75,
+        height: 52, // Tinggi sesuai dengan desain Figma
+        width: double.infinity, // Lebar memanjang mengisi penuh area drawer
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(
+            12,
+          ), // Ujungnya dibikin melengkung
           border: Border.all(
-            color: isCurrent ? Colors.blue : Colors.black12,
+            color: isCurrent ? const Color(0xFF229EFF) : Colors.black12,
             width: isCurrent ? 3 : 1,
           ),
         ),
         child: isCurrent
             ? const Center(
-                child: CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  radius: 12,
-                  child: Icon(Icons.check, size: 14, color: Colors.white),
+                child: Icon(
+                  Icons.check,
+                  size: 24,
+                  // Pakai warna hitam transparan supaya centangnya terlihat jelas di warna kuning/krem yang terang
+                  color: Colors.black54,
                 ),
               )
             : null,
