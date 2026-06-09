@@ -121,15 +121,33 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
+    // ==========================================
+    // 🛠️ BAGIAN YANG DIUBAH / DIPERBAIKI:
+    // ==========================================
+
     // START
-    _controller.forward();
+    // ALASAN MENGGUNAKAN KODE INI:
+    // Kita membungkus `_controller.forward()` ke dalam `Future.delayed` selama 500 milidetik (0.5 detik).
+    // Tujuannya memberi waktu bagi HP untuk menyelesaikan proses "Cold Start loading" saat aplikasi pertama kali dibuka.
+    // Dengan begitu, animasi dijamin baru akan berjalan setelah layar aplikasi benar-benar siap dan muncul di HP user (tidak ke-skip).
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        _controller.forward();
+      }
+    });
 
     // NAVIGATE
-    Future.delayed(const Duration(milliseconds: 8200), () {
+    // ALASAN MENGGUNAKAN KODE INI:
+    // Karena waktu mulai animasinya kita undur 500ms, maka waktu tunggu perpindahan halaman (navigasi)
+    // juga harus kita tambah 500ms (dari 8200ms menjadi 8700ms) agar durasi diam (statis) di akhir animasi
+    // tetap pas dan presisi seperti rancangan awal kamu.
+    Future.delayed(const Duration(milliseconds: 8700), () {
       if (mounted) {
         context.go('/splash-cream');
       }
     });
+
+    // ==========================================
   }
 
   @override
@@ -174,7 +192,6 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
 
-                
                 // LOGO + TEXT
                 Row(
                   mainAxisSize: MainAxisSize.min,

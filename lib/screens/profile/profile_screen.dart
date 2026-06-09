@@ -11,7 +11,25 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Variabel untuk Switch Notifikasi
   bool _isNotificationOn = false;
+
+  // =========================================================
+  // 🛠️ TAMBAHAN LOGIC UI UNTUK EDIT NAMA
+  // ALASAN: Kita butuh controller untuk menyimpan teks yang diketik user,
+  // dan variabel boolean untuk menandai apakah user sedang dalam mode "edit" atau tidak.
+  // =========================================================
+  bool _isEditingName = false;
+  final TextEditingController _nameController = TextEditingController(
+    text: 'Anna syla',
+  );
+
+  @override
+  void dispose() {
+    _nameController
+        .dispose(); // Jangan lupa dibuang saat halaman ditutup agar memori tidak bocor
+    super.dispose();
+  }
 
   // Warna Akurat Sesuai Desain Figma
   final Color _bgColor = const Color(0xFFFDF7E7); // Krem Latar Belakang
@@ -191,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 16),
 
-            // 5. INPUT KOTAK NAMA (ANNA SYLA)
+            // 5. INPUT KOTAK NAMA (DIPERBARUI DENGAN FITUR EDIT UI)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Container(
@@ -212,23 +230,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Anna syla',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: _textColor,
-                        ),
+                      // PERUBAHAN: TEXT MENJADI TEXTFIELD SAAT MODE EDIT
+                      Expanded(
+                        child: _isEditingName
+                            ? TextField(
+                                controller: _nameController,
+                                autofocus:
+                                    true, // Otomatis fokus dan memunculkan keyboard
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: _textColor,
+                                ),
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder
+                                      .none, // Hilangkan garis bawah TextField
+                                ),
+                                onSubmitted: (value) {
+                                  // Simpan jika keyboard dienter
+                                  setState(() {
+                                    _isEditingName = false;
+                                  });
+                                },
+                              )
+                            : Text(
+                                _nameController
+                                    .text, // Ambil nama dari Controller
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: _textColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ),
-                      SvgPicture.asset(
-                        'assets/icons/mingcute_pencil.svg',
-                        width: 20,
-                        height: 20,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF2574B2),
-                          BlendMode.srcIn,
-                        ),
+                      const SizedBox(width: 10),
+
+                      // TOMBOL PENSIL/CENTANG
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            // Balikkan keadaan: dari edit ke save, atau dari save ke edit
+                            _isEditingName = !_isEditingName;
+                          });
+                        },
+                        child: _isEditingName
+                            ? const Icon(
+                                Icons
+                                    .check_circle_outline, // Munculkan icon centang jika sedang edit
+                                color: Color(0xFF2574B2),
+                                size: 22,
+                              )
+                            : SvgPicture.asset(
+                                'assets/icons/mingcute_pencil.svg',
+                                width: 20,
+                                height: 20,
+                                colorFilter: const ColorFilter.mode(
+                                  Color(0xFF2574B2),
+                                  BlendMode.srcIn,
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -272,7 +337,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 14),
 
-            // 7. KOTAK GABUNGAN NOTIFIKASI (CUSTOM TOGGLE 100% MATCH FIGMA)
+            // 7. KOTAK GABUNGAN NOTIFIKASI
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Container(
@@ -292,66 +357,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
+
+                    // 1. POSISI KIRI (Leading) - MENGGUNAKAN ICON BAWAAN FLUTTER
                     leading: const Icon(
                       Icons.notifications_none_rounded,
                       color: Colors.black87,
-                      size: 24,
+                      size: 26, // Ukuran disesuaikan agar proporsional
                     ),
-                    title: Text(
+
+                    // 2. POSISI TENGAH
+                    title: const Text(
                       'Notifikasi',
                       style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: _textColor,
                       ),
                     ),
 
-                    // --- INI ADALAH CUSTOM TOGGLE SWITCH BARU ---
-                    trailing: GestureDetector(
-                      onTap: () {
+                    /// 3. POSISI KANAN (Trailing)
+                    trailing: Switch(
+                      value: _isNotificationOn,
+                      // Warna saat tombol NYALA (ON)
+                      activeColor: Colors.white, // Warna lingkaran/tombol
+                      activeTrackColor: const Color(
+                        0xFF2574B2,
+                      ), // Warna lintasan (biru tema aplikasimu)
+                      // Warna saat tombol MATI (OFF)
+                      inactiveThumbColor: Colors.grey.shade600,
+                      inactiveTrackColor: Colors.grey.shade300,
+
+                      onChanged: (value) {
                         setState(() {
-                          _isNotificationOn = !_isNotificationOn;
+                          _isNotificationOn = value;
                         });
                       },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeInOut,
-                        width: 48, // Lebar kotak kapsul
-                        height: 26, // Tinggi kotak kapsul
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: _isNotificationOn
-                              ? const Color(0xFF2574B2) // Biru saat ON
-                              : const Color(0xFFD9D9D9), // Abu-abu saat OFF
-                        ),
-                        padding: const EdgeInsets.all(3),
-                        child: AnimatedAlign(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeInOut,
-                          alignment: _isNotificationOn
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Container(
-                            width: 20, // Lebar lingkaran putih
-                            height: 20, // Tinggi lingkaran putih
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
-
-                    // ---------------------------------------------
                   ),
                 ),
               ),
@@ -369,13 +409,9 @@ class FigmaAuraPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color =
-          const Color(
-            0xFF2574B2,
-          ) // Biru Khas Fokusin solid tanpa di-opacity lagi di sini
+      ..color = const Color(0xFF2574B2)
       ..style = PaintingStyle.stroke
-      ..strokeWidth =
-          110 // Dipertebal dari 55 agar saat kena blur birunya tidak hilang/pucat
+      ..strokeWidth = 110
       ..strokeCap = StrokeCap.round;
 
     final path = Path();
