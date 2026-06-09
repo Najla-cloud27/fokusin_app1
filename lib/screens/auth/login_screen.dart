@@ -4,17 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Pastikan import ini sesuai dengan struktur folder kamu
+// Import Screen & Constants bawaan kamu
 import 'package:fokusin_app1/screens/auth/register_screen.dart';
 import 'package:fokusin_app1/screens/auth/google_auth_popup.dart';
 import 'package:fokusin_app1/core/constants/asset_paths.dart';
 
-class LoginScreen extends StatelessWidget {
+// Import Widget Custom yang baru kita buat di folder widgets/auth/
+import 'package:fokusin_app1/widgets/auth/auth_textfield.dart';
+import 'package:fokusin_app1/widgets/auth/auth_button.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // Controller untuk menangkap input teks user
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   static const Color _bgColor = Color(0xFFFFF8E4);
   static const Color _blue = Color(0xFF2F9BF4);
   static const Color _dark = Color(0xFF1A1A2E);
+
+  @override
+  void dispose() {
+    // Membersihkan controller saat screen ditutup agar tidak memakan memori
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +44,17 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            //  COMPONENT ILUSTRASI
+            // 1. COMPONENT ILUSTRASI (Bawaan kode kamu yang super rapi)
             const _AuthIllustrationHeader(),
 
-            // Jarak diperbesar agar form lebih turun ke tengah
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
 
-            //BAGIAN FORM & BUTTON
+            // 2. BAGIAN FORM & BUTTON
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Teks Dibuat Rata Tengah (Center)
                   Text(
                     'Masuk untuk Fokusin',
                     style: GoogleFonts.poppins(
@@ -46,9 +65,92 @@ class LoginScreen extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
-                  //  TOMBOL GOOGLE
+                  // 👇 INPUT EMAIL (Menggunakan Custom Widget) 👇
+                  AuthTextField(
+                    controller: _emailController,
+                    hintText: 'Masukkan Email',
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 👇 INPUT PASSWORD (Menggunakan Custom Widget) 👇
+                  AuthTextField(
+                    controller: _passwordController,
+                    hintText: 'Masukkan Kata Sandi',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: true,
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // 👇 LINK LUPA KATA SANDI 👇
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        // Nanti diarahkan ke ForgotPasswordScreen
+                      },
+                      child: Text(
+                        'Lupa Kata Sandi?',
+                        style: GoogleFonts.poppins(
+                          color: _blue,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 👇 TOMBOL MASUK MANUAL (Menggunakan Custom Widget) 👇
+                  AuthButton(
+                    text: 'Masuk',
+                    onPressed: () {
+                      // print untuk testing input di debug console
+                      print('Email: ${_emailController.text}');
+                      print('Password: ${_passwordController.text}');
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 👇 GARIS PEMISAH "Atau" 👇
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'Atau',
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey.shade500,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 👇 TOMBOL GOOGLE (Bawaan kode kamu) 👇
                   Container(
                     height: 58,
                     padding: const EdgeInsets.all(4),
@@ -69,14 +171,12 @@ class LoginScreen extends StatelessWidget {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(32),
                           onTap: () {
-                            // 👇 UBAH JADI SHOWDIALOG AGAR MUNCUL DI TENGAH 👇
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return const Dialog(
                                   backgroundColor: Colors.transparent,
                                   surfaceTintColor: Colors.transparent,
-                                  // Memanggil file popup kamu
                                   child: GoogleAuthPopup(),
                                 );
                               },
@@ -105,9 +205,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 32),
 
-                  //  LINK PINDAH KE REGISTER
+                  // 👇 LINK PINDAH KE REGISTER (Bawaan kode kamu) 👇
                   Center(
                     child: RichText(
                       text: TextSpan(
@@ -139,7 +239,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -150,7 +250,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// ================= WIDGET ILUSTRASI HEADER =================
+// ================= WIDGET ILUSTRASI HEADER (100% Asli buatan kamu) =================
 class _AuthIllustrationHeader extends StatelessWidget {
   const _AuthIllustrationHeader();
 
