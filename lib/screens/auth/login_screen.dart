@@ -107,14 +107,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 24),
 
-                  // 👇 TOMBOL MASUK MANUAL (Menggunakan Custom Widget) 👇
-                  AuthButton(
-                    text: 'Masuk',
-                    onPressed: () {
-                      // print untuk testing input di debug console
-                      print('Email: ${_emailController.text}');
-                      print('Password: ${_passwordController.text}');
-                    },
+                  // 👇 TOMBOL MASUK (Sudah disesuaikan dengan desain Daftar) 👇
+                  // 👇 TOMBOL MASUK (Sudah pakai border light blue persis seperti Daftar) 👇
+                  Container(
+                    height: 58,
+                    padding: const EdgeInsets.all(
+                      4,
+                    ), // Jarak antara border luar dan tombol dalam
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(36),
+                      border: Border.all(
+                        color: const Color(
+                          0xFF8FD0FF,
+                        ), // Warna border biru muda (light)
+                        width: 4, // Ketebalan border disamakan
+                      ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: _blue, // Warna tombol biru utama
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(32),
+                          onTap: () {
+                            // print untuk testing input di debug console
+                            print('Email: ${_emailController.text}');
+                            print('Password: ${_passwordController.text}');
+                          },
+                          child: Center(
+                            child: Text(
+                              'Masuk',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 24),
